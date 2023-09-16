@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"os"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -289,3 +290,21 @@ func hardTimeoutMiddleware(hardTimeout time.Duration) echo.MiddlewareFunc {
 		}
 	}
 }
+
+func authorizationMiddleware() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			apiKey := os.Getenv("API_KEY")
+			if apiKey == "" || c.Request().RequestURI == "/health" {
+				return next(c)
+			}
+			authHeader := c.Request().Header.Get("Authorization")
+			if authHeader != "a1234" {
+				return c.String(http.StatusUnauthorized, "Unauthorized: Invalid Authorization header")
+			}
+			return next(c)
+		}
+	}
+}
+
+

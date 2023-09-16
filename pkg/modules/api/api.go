@@ -415,6 +415,7 @@ func (a *API) Start() error {
 		rootPathMiddleware(a.rootPath),
 		traceMiddleware(a.traceHeader),
 		loggerMiddleware(a.logger, disableLoggingForPaths),
+		authorizationMiddleware(),
 	)
 
 	// Add the modules' middlewares in their respective stacks.
