@@ -299,7 +299,7 @@ func authorizationMiddleware() echo.MiddlewareFunc {
 				return next(c)
 			}
 			authHeader := c.Request().Header.Get("Authorization")
-			if authHeader != "a1234" {
+			if authHeader != apiKey {
 				return c.String(http.StatusUnauthorized, "Unauthorized: Invalid Authorization header")
 			}
 			return next(c)
